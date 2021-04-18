@@ -17,7 +17,63 @@ class ActorBase(metaclass=ABCMeta):
 
 
 class DiscreteActor(ActorBase):
-    pass
+    def __init__(self, sess, feature_num, action_num, learning_rate=0.001):
+        self.sess = sess
+        self.feature_num = feature_num
+        self.action_num = action_num
+        self.lr = learning_rate
+        self._build_net()
+
+    def _build_net(self):
+        self.s = tf.placeholder(name="s", shape=(None, self.feature_num), dtype=tf.float32)
+        self.a = tf.placeholder(name="a", shape=(None, ), dtype=tf.int32)
+        self.td_error = tf.placeholder(name="td_error", shape=(None, ), dtype=tf.float32)
+        with tf.variable_scope("actor_net"):
+            l1 = tf.layers.dense(
+                inputs=self.s
+                , name="l1"
+                , kernel_initializer=tf.random_normal_initializer(0., 0.1)
+                , bias_initializer=tf.constant_initializer(0.1)
+                , activation=tf.nn.relu
+                , units=20
+            )
+            self.action_logit = tf.layers.dense(
+                inputs=l1
+                , name= "action_logit"
+                , units=self.action_num
+                , activation=None
+                , kernel_initializer=tf.random_normal_initializer(0., 0.1)
+                , bias_initializer=tf.constant_initializer(0.1)
+            )
+            self.action_prob = tf.nn.softmax(self.action_logit)
+        with tf.variable_scope("loss"):
+            log_loss = tf.nn.sparse_softmax_cross_entropy_with_logits(
+                logits=self.action_logit
+                , labels=self.a
+            )
+            self.loss = tf.reduce_mean(log_loss*self.td_error)
+        with tf.variable_scope("train_op"):
+            self.train_op = tf.train.AdamOptimizer(self.lr).minimize(self.loss)
+
+    def learn(self, a, s, td_error):
+        feed_dict = {
+            self.a: np.array([a])
+            , self.s: s[np.newaxis, :]
+            , self.td_error: np.array([td_error])
+        }
+        self.sess.run(
+            [self.loss, self.train_op]
+            , feed_dict=feed_dict
+        )
+
+    def choose_action(self, s):
+        action_prob = self.sess.run(
+            self.action_prob
+            , feed_dict={
+                self.s: s[np.newaxis, :]
+            }
+        )
+        return np.random.choice(np.arange(action_prob.shape[1]), p=action_prob.ravel())
 
 
 class Continuous(ActorBase):
@@ -41,11 +97,6 @@ class Critic:
             , shape=(None, self.feature_num)
             , dtype=tf.float32
         )
-        self.s_ = tf.placeholder(
-            name="s_"
-            , shape=(None, self.feature_num)
-            , dtype=tf.float32
-        )
         self.reward = tf.placeholder(
             name="reward"
             , shape=None
@@ -60,7 +111,7 @@ class Critic:
             l1 = tf.layers.dense(
                 inputs=self.s
                 , name="l1"
-                , units=10
+                , units=20
                 , kernel_initializer=tf.random_normal_initializer(0., 0.1)
                 , bias_initializer=tf.constant_initializer(0.1)
                 , activation=tf.nn.relu
@@ -71,12 +122,13 @@ class Critic:
                 , units=1
                 , kernel_initializer=tf.random_normal_initializer(0., 0.1)
                 , bias_initializer=tf.constant_initializer(0.1)
-                , activation=tf.nn.relu
+                # , activation=tf.nn.relu
             )
         with tf.variable_scope("td_error"):
             self.td_error = self.reward + self.gamma * self.v_next - self.exp_v
+            loss = tf.square(self.td_error)
         with tf.variable_scope("train_op"):
-            self.train_op = tf.train.AdamOptimizer(self.lr).minimize(self.td_error)
+            self.train_op = tf.train.AdamOptimizer(self.lr).minimize(loss)
 
     def learn(self, current_state, reward, next_state):
         v_next = self.sess.run(
@@ -88,9 +140,9 @@ class Critic:
         _, td_error = self.sess.run(
             [self.train_op, self.td_error]
             , feed_dict={
-                self.a: current_state[np.newaxis, :]
-                , self.reward: reward[np.newaxis, :]
+                self.s: current_state[np.newaxis, :]
+                , self.reward: reward
                 , self.v_next: v_next
             }
         )
-        return td_error
+        return td_error[0][0]
