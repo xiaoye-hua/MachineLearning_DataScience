@@ -6,6 +6,7 @@
 import tensorflow as tf
 import numpy as np
 from abc import ABCMeta, abstractmethod
+from typing import List
 
 
 class ActorBase(metaclass=ABCMeta):
@@ -76,8 +77,97 @@ class DiscreteActor(ActorBase):
         return np.random.choice(np.arange(action_prob.shape[1]), p=action_prob.ravel())
 
 
-class Continuous(ActorBase):
-    pass
+class ContinuousActor(ActorBase):
+    def __init__(self, sess: tf.Session, feature_num: np.array, action_bound: List,
+                 learning_rate=0.001
+                 ) -> None:
+        self.feature_num = feature_num
+        self.action_bound = action_bound
+        self.lr = learning_rate
+        self.sess = sess
+        self._build_net()
+
+    def _build_net(self) -> None:
+        self.s = tf.placeholder(
+            shape=(None, self.feature_num)
+            , dtype=tf.float32
+            , name="observation"
+        )
+        self.a = tf.placeholder(
+            shape=None   # or shape=None
+            , dtype=tf.float32
+            , name="action"
+        )
+        self.td_error = tf.placeholder(
+            shape=None
+            , dtype=tf.float32
+            , name="td_error"
+        )
+        with tf.variable_scope("actor"):
+            l1 = tf.layers.dense(
+                inputs=self.s
+                , name="l1"
+                , kernel_initializer=tf.random_normal_initializer(0., 0.1)
+                , bias_initializer=tf.constant_initializer(0.1)
+                , activation=tf.nn.relu
+                , units=30
+            )
+            mu = tf.layers.dense(
+                inputs=l1
+                , name="mu"
+                , kernel_initializer=tf.random_normal_initializer(0., 0.1)
+                , bias_initializer=tf.constant_initializer(0.1)
+                , activation=tf.nn.tanh
+                , units=1
+            )
+            sigma = tf.layers.dense(
+                inputs=l1
+                , name="sigma"
+                , kernel_initializer=tf.random_normal_initializer(0., 0.1)
+                , bias_initializer=tf.constant_initializer(0.1)
+                , activation=tf.nn.softplus
+                , units=1
+            )
+            # TOD0： why add 0.1
+            self.mu, self.sigma = tf.squeeze(2*mu), tf.squeeze(sigma + 0.1)
+            self.dist = tf.distributions.Normal(self.mu, self.sigma)
+            with tf.variable_scope("loss"):
+                log_prob = self.dist.log_prob(self.a)
+                self.loss = log_prob*self.td_error
+                # 增加探索性
+                self.loss += self.dist.entropy() * 0.01
+                self.loss = -self.loss
+            # TODO 没懂？？
+            global_step = tf.Variable(0, trainable=False)
+            with tf.variable_scope("train"):
+                self.train_ops = tf.train.AdamOptimizer(self.lr).minimize(self.loss
+                                                                          , global_step
+                                                                          )
+
+
+            # variable for inference
+            self.inference_action = tf.clip_by_value(self.dist.sample(1), self.action_bound[0],
+                                                     self.action_bound[1])
+
+    def learn(self, a: np.array, s: np.array, td_error: float) -> None:
+        feed_dict = {
+            self.a: a
+            , self.s: s[np.newaxis, :]
+            , self.td_error: td_error
+        }
+        self.sess.run(
+            self.train_ops
+            , feed_dict
+        )
+
+    def choose_action(self, s: np.array) -> List[float]:
+        action = self.sess.run(
+            self.inference_action
+            , {
+                self.s: s[np.newaxis, :]
+            }
+        )
+        return action
 
 
 class Critic:
