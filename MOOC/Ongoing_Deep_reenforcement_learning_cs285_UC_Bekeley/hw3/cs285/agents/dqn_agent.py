@@ -113,11 +113,11 @@ class DQNAgent(object):
             # HINT: obs_t_ph, act_t_ph, rew_t_ph, obs_tp1_ph, done_mask_ph
             feed_dict = {
                 self.critic.learning_rate: self.optimizer_spec.lr_schedule.value(self.t),
-                TODO,
-                TODO,
-                TODO,
-                TODO,
-                TODO,
+                # TODO,
+                # TODO,
+                # TODO,
+                # TODO,
+                # TODO,
             }
 
             # TODO: create a LIST of tensors to run in order to 

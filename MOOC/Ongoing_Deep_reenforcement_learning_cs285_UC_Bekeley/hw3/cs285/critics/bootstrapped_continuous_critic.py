@@ -2,6 +2,7 @@ from .base_critic import BaseCritic
 import tensorflow as tf
 from cs285.infrastructure.tf_utils import build_mlp
 
+
 class BootstrappedContinuousCritic(BaseCritic):
     def __init__(self, sess, hparams):
         self.sess = sess
@@ -47,15 +48,15 @@ class BootstrappedContinuousCritic(BaseCritic):
             "nn_critic",
             n_layers=self.n_layers,
             size=self.size))
-        self.sy_target_n = tf.placeholder(shape=[None], name="critic_target", dtype=tf.float32)
+        # self.sy_target_n = tf.placeholder(shape=[None, ], name="critic_target", dtype=tf.float32)
 
-        # TODO: set up the critic loss
+        # TODO: set up the critic loss -> Finished
         # HINT1: the critic_prediction should regress onto the targets placeholder (sy_target_n)
         # HINT2: use tf.losses.mean_squared_error
-        self.critic_loss = TODO
+        self.critic_loss = tf.losses.mean_squared_error(self.sy_adv_n, self.critic_prediction)
 
-        # TODO: use the AdamOptimizer to optimize the loss defined above
-        self.critic_update_op = TODO
+        # TODO: use the AdamOptimizer to optimize the loss defined above -> Finished
+        self.critic_update_op = tf.train.AdamOptimizer(self.learning_rate).minimize(self.critic_loss)
 
     def define_placeholders(self):
         """
@@ -77,9 +78,15 @@ class BootstrappedContinuousCritic(BaseCritic):
         return sy_ob_no, sy_ac_na, sy_adv_n
 
     def forward(self, ob):
-        # TODO: run your critic
+        # TODO: run your critic  -> finished
         # HINT: there's a neural network structure defined above with mlp layers, which serves as your 'critic'
-        return TODO
+        advantage = self.sess.run(
+            self. TODO??
+            , feed_dict={
+                self.sy_ob_no: ob
+            }
+        )
+        return advantage
 
     def update(self, ob_no, next_ob_no, re_n, terminal_n):
         """
@@ -103,10 +110,22 @@ class BootstrappedContinuousCritic(BaseCritic):
         # TODO: Implement the pseudocode below: 
 
         # do the following (self.num_grad_steps_per_target_update * self.num_target_updates) times:
+
+        for update_num in range(self.num_target_updates):
+            begin_idx = (update_num*self.num_grad_steps_per_target_update) % ob_no.shape[0]
+            tran_ob = ob_no[begin_idx:begin_idx+self.num_grad_steps_per_target_update, :]
+            train_next_ob = next_ob_no[begin_idx:begin_idx+self.num_grad_steps_per_target_update, :]
+            train_re_n = re_n[begin_idx:begin_idx+self.num_grad_steps_per_target_update]
+            train_terminal_n = terminal_n[begin_idx:begin_idx+self.num_grad_steps_per_target_update]
+            vs = self.forward(train_next_ob)
+
+
+
             # every self.num_grad_steps_per_target_update steps (which includes the first step),
                 # recompute the target values by 
                     #a) calculating V(s') by querying this critic network (ie calling 'forward') with next_ob_no
                     #b) and computing the target values as r(s, a) + gamma * V(s')
+                # TODO: 手动修改reward， 为了收敛？？
                 # HINT: don't forget to use terminal_n to cut off the V(s') (ie set it to 0) when a terminal state is reached
             # every time,
                 # update this critic using the observations and targets

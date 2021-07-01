@@ -8,6 +8,7 @@ import tensorflow as tf
 from cs285.infrastructure.rl_trainer import RL_Trainer
 from cs285.agents.ac_agent import ACAgent
 
+
 class AC_Trainer(object):
 
     def __init__(self, params):
@@ -20,6 +21,7 @@ class AC_Trainer(object):
             'n_layers': params['n_layers'],
             'size': params['size'],
             'learning_rate': params['learning_rate'],
+            # TODO: num_target_updates 啥意思
             'num_target_updates': params['num_target_updates'],
             'num_grad_steps_per_target_update': params['num_grad_steps_per_target_update'],
             }
