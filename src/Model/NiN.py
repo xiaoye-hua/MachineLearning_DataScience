@@ -1,44 +1,42 @@
 import tensorflow as tf
-from tensorflow.keras import Model
 import matplotlib.pyplot as plt
-from tensorflow.keras.layers import Conv2D, Dense, Dropout, MaxPool2D, Flatten
+from tensorflow.keras import Model
+from tensorflow.keras.layers import Conv2D, Dense, MaxPool2D, Flatten, Dropout, GlobalAvgPool2D
 
 
-class VGGBlock(Model):
-    def __init__(self, cnn_number, filter_num):
-        super(VGGBlock, self).__init__()
-        self.layer_lst = []
-        for _ in range(cnn_number):
-            self.layer_lst.append(
-                Conv2D(filters=filter_num, kernel_size=3, padding='same', activation='relu')
-            )
-        self.layer_lst.append(MaxPool2D(pool_size=2, strides=2))
+class NiNBlock(Model):
+    def __init__(self, filter_num, kernel_size, padding, strids):
+        super(NiNBlock, self).__init__()
+        self.layers_lst = []
+        self.layers_lst.append(
+            Conv2D(filters=filter_num, kernel_size=kernel_size, padding=padding, strides=strids, activation='relu')
+        )
+        for _ in range(2):
+            self.layers_lst.append(Conv2D(filters=filter_num, kernel_size=1, activation='relu'))
 
     def call(self, inputs, training=None, mask=None):
-        for layer in self.layer_lst:
+        for layer in self.layers_lst:
             inputs = layer(inputs)
         return inputs
 
 
-class VGG11(Model):
+class NiN(Model):
     def __init__(self, label_num):
-        super(VGG11, self).__init__()
-        # (cnn_num, filter_num)
-        vgg_block_info = [(1, 64), (1, 128), (2, 256),
-                          (2, 512)
-                          , (2, 512)
-                          ]
+        super(NiN, self).__init__()
         self.layer_lst = []
-        for cnn_num, filter_num in vgg_block_info:
-            self.layer_lst.append(
-                VGGBlock(cnn_number=cnn_num, filter_num=filter_num)
-            )
+        NiNBlock_info = [
+            [96, 11, 4, 'valid'],
+            [256, 5, 1, 'same'],
+            [384, 3, 1, 'same']
+            # , [10, 3, 1, 1]
+        ]
+        for (filter_num, kernel_size, strides, pading) in NiNBlock_info:
+            self.layer_lst.append(NiNBlock(filter_num=filter_num, kernel_size=kernel_size, strids=strides, padding=pading))
+            self.layer_lst.append(MaxPool2D(pool_size=3, strides=2))
+        self.layer_lst.append(Dropout(0.5))
+        self.layer_lst.append(NiNBlock(filter_num=label_num, kernel_size=3, strids=1, padding='same'))
+        self.layer_lst.append(GlobalAvgPool2D())
         self.layer_lst.append(Flatten())
-        self.layer_lst.append(Dense(units=4096, activation='relu'))
-        self.layer_lst.append(Dropout(rate=0.5))
-        self.layer_lst.append(Dense(units=4096, activation='relu'))
-        self.layer_lst.append(Dropout(rate=0.5))
-        self.layer_lst.append(Dense(units=label_num))
 
     def call(self, inputs, training=None, mask=None):
         for layer in self.layer_lst:
@@ -51,12 +49,12 @@ if __name__ == "__main__":
     debug = True
     img_dimension = 28
     target_dimension = 224
-    batch_size = 32
+    batch_size = 8
     epochs = 10
     label_num = 10
     if debug:
-        train_num = 600
-        test_num = 100
+        train_num = 60
+        test_num = 10
     else:
         train_num = -1
         test_num = -1
@@ -74,7 +72,7 @@ if __name__ == "__main__":
     x_train = tf.image.resize(x_train, [target_dimension, target_dimension])
     x_test = tf.image.resize(x_test, [target_dimension, target_dimension])
 
-    model = VGG11(label_num=10)
+    model = NiN(label_num=10)
     model.compile(optimizer='adam', loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics=['accuracy'])
 
     sample_input = tf.ones(shape=[1, target_dimension, target_dimension, 1])
@@ -112,5 +110,3 @@ if __name__ == "__main__":
     plt.legend(loc='upper right')
     plt.title("Train & val loss")
     plt.show()
-
-
