@@ -1,14 +1,13 @@
 
 import tensorflow as tf
 
-from tensorflow.keras import datasets, layers, models
+from tensorflow.keras import datasets
 
 # import sys
 # sys.path.append("../")
 # from src.cv.Model import model_builder_dict
 # from src.cv.Model.ResNet import ResNet
-from src.Model.ResNet50 import ResNet50
-from src.Model.CNNModel import CNN
+from src.Model.CNN.CNNModel import CNN
 
 
 
