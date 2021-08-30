@@ -157,3 +157,4 @@ target/*
 log
 .DS_Store
 ongoing_notebooks/*
+./src/Model/data/*

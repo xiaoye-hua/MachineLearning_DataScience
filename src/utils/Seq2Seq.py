@@ -124,9 +124,44 @@ def train_seq2seq(net, data_iter, lr, num_epochs, tgt_vocab, device):
     # print(f'loss {metric[0] / metric[1]:.3f}, {metric[1] / timer.stop():.1f} '
     #       f'tokens/sec on {str(device)}')
 
+
+#@save
+def predict_seq2seq(net, src_sentence, src_vocab, tgt_vocab, num_steps,
+                    save_attention_weights=False):
+    """Predict for sequence to sequence."""
+    src_tokens = src_vocab[src_sentence.lower().split(' ')] + [
+        src_vocab['<eos>']]
+    enc_valid_len = tf.constant([len(src_tokens)])
+    src_tokens = d2l.truncate_pad(src_tokens, num_steps, src_vocab['<pad>'])
+    # Add the batch axis
+    enc_X = tf.expand_dims(src_tokens, axis=0)
+    enc_outputs = net.encoder(enc_X, enc_valid_len, training=False)
+    dec_state = net.decoder.init_state(enc_outputs, enc_valid_len)
+    # Add the batch axis
+    dec_X = tf.expand_dims(tf.constant([tgt_vocab['<bos>']]), axis=0)
+    output_seq, attention_weight_seq = [], []
+    for _ in range(num_steps):
+        Y, dec_state = net.decoder(dec_X, dec_state, training=False)
+        # We use the token with the highest prediction likelihood as the input
+        # of the decoder at the next time step
+        dec_X = tf.argmax(Y, axis=2)
+        pred = tf.squeeze(dec_X, axis=0)
+        # Save attention weights
+        if save_attention_weights:
+            attention_weight_seq.append(net.decoder.attention_weights)
+        # Once the end-of-sequence token is predicted, the generation of the
+        # output sequence is complete
+        if pred == tgt_vocab['<eos>']:
+            break
+        output_seq.append(pred.numpy())
+    return ' '.join(
+        tgt_vocab.to_tokens(
+            tf.reshape(output_seq,
+                       shape=-1).numpy().tolist())), attention_weight_seq
+
 embed_size, num_hiddens, num_layers, dropout = 32, 32, 2, 0.1
 batch_size, num_steps = 64, 10
-lr, num_epochs, device = 0.005, 300, d2l.try_gpu()
+lr, num_epochs, device = 0.005, 200, d2l.try_gpu()
 
 train_iter, src_vocab, tgt_vocab = d2l.load_data_nmt(batch_size, num_steps)
 encoder = Seq2SeqEncoder(len(src_vocab), embed_size, num_hiddens, num_layers,
@@ -135,6 +170,9 @@ decoder = Seq2SeqDecoder(len(tgt_vocab), embed_size, num_hiddens, num_layers,
                          dropout)
 net = d2l.EncoderDecoder(encoder, decoder)
 train_seq2seq(net, train_iter, lr, num_epochs, tgt_vocab, device)
+res = predict_seq2seq(net, "How do you do", src_vocab, tgt_vocab, num_steps,
+                    save_attention_weights=False)
+print(res)
 
 
 if __name__ == "__main__":
@@ -154,6 +192,8 @@ if __name__ == "__main__":
 
     loss = MaskedSoftmaxCELoss(tf.constant([4, 2, 0]))
     loss(tf.ones((3, 4), dtype=tf.int32), tf.ones((3, 4, 10))).numpy()
+
+
 # #
 # class Encoder(DLModel):
 #     def __init__(self):

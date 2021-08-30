@@ -21,6 +21,15 @@ class Seq2SeqEncoder(DLModel):
         )
 
     def call(self, inputs, training=None, mask=None):
+        """
+        Args:
+            inputs:
+            training:
+            mask:
+
+        Returns:
+            ()
+        """
         x = self.embed(inputs)
         output = self.rnn(x)
         return output[0], output[1:]
@@ -57,6 +66,7 @@ class SeqSeq(DLModel):
         output, state = self.decoder(inputs=decoder_X, hidden_state=state)
         return output, state
 
+
 class MaskSoftmaxCrossEntropy(tf.keras.losses.Loss):
     def __init__(self, valid_len):
         # reduction='none' ensure the error will not be reduce_mean
@@ -74,21 +84,22 @@ class MaskSoftmaxCrossEntropy(tf.keras.losses.Loss):
         label = y_ture
         pred = y_pred
         weight = tf.ones_like(label, dtype=tf.float32)
-        weight = self.sequence_mask(weight, self.valid_len)
+        weight = sequence_mask(weight, self.valid_len)
         one_hot_label = tf.one_hot(label, depth=pred.shape[-1])
         noweighted_loss = tf.keras.losses.CategoricalCrossentropy(from_logits=True, reduction='none')(one_hot_label, pred)
         weight_loss = tf.reduce_mean(noweighted_loss*weight, axis=1)
         return weight_loss
 
-    def sequence_mask(self, X, valid_len, value=0):
-        """Mask irrelevant entries in sequences."""
-        maxlen = X.shape[1]
-        mask = tf.range(start=0, limit=maxlen, dtype=tf.float32)[None, :] < tf.cast(valid_len[:, None], dtype=tf.float32)
 
-        if len(X.shape) == 3:
-            return tf.where(tf.expand_dims(mask, axis=-1), X, value)
-        else:
-            return tf.where(mask, X, value)
+def sequence_mask(X, valid_len, value=0):
+    """Mask irrelevant entries in sequences."""
+    maxlen = X.shape[1]
+    mask = tf.range(start=0, limit=maxlen, dtype=tf.float32)[None, :] < tf.cast(valid_len[:, None], dtype=tf.float32)
+
+    if len(X.shape) == 3:
+        return tf.where(tf.expand_dims(mask, axis=-1), X, value)
+    else:
+        return tf.where(mask, X, value)
 
 def train_seq2seq(net: SeqSeq, data_iter, lr, num_epochs, tgt_vocab, device):
     optimizor = tf.keras.optimizers.Adam(learning_rate=lr)
@@ -115,29 +126,24 @@ def train_seq2seq(net: SeqSeq, data_iter, lr, num_epochs, tgt_vocab, device):
 
 
 if __name__ == "__main__":
-    # encoder
-    encoder = Seq2SeqEncoder(vocab_size=10, embed_size=8, num_hiddens=16,
-                             num_layers=2)
-    X = tf.zeros((4, 7))
-    output, state = encoder(X, training=False)
-    output.shape
+    pass
 
-#     # decoder
-    decoder = Seq2SeqDecoder(vocab_size=10, embed_size=8, num_hiddens=16,
-                             num_layers=2)
-    # state = decoder.init_state(encoder(X))
-    output, state = decoder(X, encoder(X)[1], training=False)
-    output.shape, len(state), state[0].shape
-
-    loss = MaskSoftmaxCrossEntropy(tf.constant([4, 2, 0]))
-    res = loss(y_true=tf.ones((3, 4), dtype=tf.int32), y_pred=tf.ones((3, 4, 10))).numpy()
-
-    embed_size, num_hiddens, num_layers, dropout = 32, 32, 2, 0.1
-    batch_size, num_steps = 64, 10
-    lr, num_epochs, device = 0.005, 300, d2l.try_gpu()
-
-    train_iter, src_vocab, tgt_vocab = d2l.load_data_nmt(batch_size, num_steps)
-    net = SeqSeq(source_vocab_size=len(src_vocab), target_vocab_size=len(tgt_vocab), embed_size=embed_size, num_hiddens=num_hiddens, num_layers=num_layers, dropout=dropout)
-    train_seq2seq(net, train_iter, lr, num_epochs, tgt_vocab, device)
-
+# #     # decoder
+#     decoder = Seq2SeqDecoder(vocab_size=10, embed_size=8, num_hiddens=16,
+#                              num_layers=2)
+#     # state = decoder.init_state(encoder(X))
+#     output, state = decoder(X, encoder(X)[1], training=False)
+#     output.shape, len(state), state[0].shape
+#
+#     loss = MaskSoftmaxCrossEntropy(tf.constant([4, 2, 0]))
+#     res = loss(y_true=tf.ones((3, 4), dtype=tf.int32), y_pred=tf.ones((3, 4, 10))).numpy()
+#
+#     embed_size, num_hiddens, num_layers, dropout = 32, 32, 2, 0.1
+#     batch_size, num_steps = 64, 10
+#     lr, num_epochs, device = 0.005, 300, d2l.try_gpu()
+#
+#     train_iter, src_vocab, tgt_vocab = d2l.load_data_nmt(batch_size, num_steps)
+#     net = SeqSeq(source_vocab_size=len(src_vocab), target_vocab_size=len(tgt_vocab), embed_size=embed_size, num_hiddens=num_hiddens, num_layers=num_layers, dropout=dropout)
+#     train_seq2seq(net, train_iter, lr, num_epochs, tgt_vocab, device)
+#
 
