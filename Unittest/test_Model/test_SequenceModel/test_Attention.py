@@ -6,7 +6,7 @@
 import tensorflow as tf
 from unittest import TestCase
 
-from src.Model.SequenceModel.Attention import masked_softmax, AdditiveAttention, DotProductAttention
+from src.Model.SequenceModel.Attention import masked_softmax, AdditiveAttention, DotProductAttention, MultiHeadAttention
 
 
 class TestSeq2SeqAttention(TestCase):
@@ -55,4 +55,24 @@ class TestSeq2SeqAttention(TestCase):
         output = attention(queries, keys, values, valid_lens, training=False)
         # output.shape
         self.assertTrue(output.shape==[2, 1, 4])
+
+    def test_MutiHeadAttention(self):
+        """
+        query and key have the same length
+        Returns:
+
+        """
+        num_hiddens, num_heads = 100, 5
+        query_size = num_hiddens
+        key_size = num_hiddens
+        attention = MultiHeadAttention(
+            # num_hiddens, num_hiddens, num_hiddens,
+                                       num_hiddens, num_heads, 0.5)
+
+        batch_size, num_queries, num_kvpairs, valid_lens = 2, 4, 6, tf.constant([
+            3, 2])
+        X = tf.ones((batch_size, num_queries, query_size))
+        Y = tf.ones((batch_size, num_kvpairs, key_size))
+        res = attention(queries=X, keys=Y, values=Y, valid_lens=valid_lens, training=False)
+        self.assertTrue(res.shape == [2, 4, 100])
 
