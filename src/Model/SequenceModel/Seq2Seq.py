@@ -26,7 +26,6 @@ class Seq2SeqEncoder(DLModel):
             inputs:
             training:
             mask:
-
         Returns:
             ()
         """

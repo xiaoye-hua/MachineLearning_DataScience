@@ -15,4 +15,6 @@ class TestSeq2Seq(TestCase):
                                  num_layers=2)
         X = tf.zeros((4, 7))
         output, state = encoder(X, training=False)
-        output.shape
+        self.assertTrue(output.shape == [4, 7, 16])
+        self.assertTrue(state[0].shape == [4, 16])
+        self.assertTrue(state[1].shape == [4, 16])
