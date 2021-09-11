@@ -51,7 +51,7 @@ def data_iter(batch_size, features, labels):
 def linreg(X, w, b):
     return tf.matmul(X, w) + b
 
-def squared_loss(y_hat, y): 
+def squared_loss(y_hat, y):
     # 注意这里返回的是向量, 另外, pytorch里的MSELoss并没有除以 2
     return (y_hat - tf.reshape(y, y_hat.shape)) ** 2 / 2
 
@@ -93,8 +93,8 @@ def train_ch3(net, train_iter, test_iter, loss, num_epochs, batch_size, params=N
             else:
                 # tf.keras.optimizers.SGD 直接使用是随机梯度下降 theta(t+1) = theta(t) - learning_rate * gradient
                 # 这里使用批量梯度下降，需要对梯度除以 batch_size, 对应原书代码的 trainer.step(batch_size)
-                trainer.apply_gradients(zip([grad / batch_size for grad in grads], params))  
-                
+                trainer.apply_gradients(zip([grad / batch_size for grad in grads], params))
+
             y = tf.cast(y, dtype=tf.float32)
             train_l_sum += l.numpy()
             train_acc_sum += tf.reduce_sum(tf.cast(tf.argmax(y_hat, axis=1) == tf.cast(y, dtype=tf.int64), dtype=tf.int64)).numpy()
@@ -123,9 +123,9 @@ def evaluate_accuracy(data_iter, net):
         acc_sum += np.sum(tf.cast(tf.argmax(net(X), axis=1), dtype=tf.int64) == y)
         n += y.shape[0]
     return acc_sum / n
-  
-  
-  
+
+
+
 # ############################## 6.3 ##################################3
 def load_data_jay_lyrics():
     """加载周杰伦歌词数据集"""
@@ -139,8 +139,8 @@ def load_data_jay_lyrics():
     vocab_size = len(char_to_idx)
     corpus_indices = [char_to_idx[char] for char in corpus_chars]
     return corpus_indices, char_to_idx, idx_to_char, vocab_size
-  
-  
+
+
 def data_iter_random(corpus_indices, batch_size, num_steps, ctx=None):
     # 减1是因为输出的索引是相应输入的索引加1
     num_examples = (len(corpus_indices) - 1) // num_steps
@@ -159,8 +159,8 @@ def data_iter_random(corpus_indices, batch_size, num_steps, ctx=None):
         X = [_data(j * num_steps) for j in batch_indices]
         Y = [_data(j * num_steps + 1) for j in batch_indices]
         yield np.array(X, ctx), np.array(Y, ctx)
-        
-        
+
+
 def data_iter_consecutive(corpus_indices, batch_size, num_steps, ctx=None):
     corpus_indices = np.array(corpus_indices)
     data_len = len(corpus_indices)
@@ -175,7 +175,7 @@ def data_iter_consecutive(corpus_indices, batch_size, num_steps, ctx=None):
         yield X, Y
 
 
-  # ############################## 6.4 ##################################3  
+  # ############################## 6.4 ##################################3
 def to_onehot(X, size):  # 本函数已保存在d2lzh_tensorflow2包中方便以后使用
     # X shape: (batch), output shape: (batch, n_class)
     return [tf.one_hot(x, size,dtype=tf.float32) for x in X.T]
@@ -194,10 +194,10 @@ def grad_clipping(grads,theta):
             new_gradient.append(grad * theta / norm)
     else:
         for grad in grads:
-            new_gradient.append(grad)  
+            new_gradient.append(grad)
     #print("new_gradient",new_gradient)
     return new_gradient
-    
+
 # 本函数已保存在d2lzh_tensorflow2包中方便以后使用
 def predict_rnn(prefix, num_chars, rnn, params, init_rnn_state,
                 num_hiddens, vocab_size,idx_to_char, char_to_idx):
@@ -231,7 +231,7 @@ def train_and_predict_rnn(rnn, get_params, init_rnn_state, num_hiddens,
     params = get_params()
     #loss = tf.keras.losses.SparseCategoricalCrossentropy()
     optimizer = tf.keras.optimizers.SGD(learning_rate=lr)
-    
+
     for epoch in range(num_epochs):
         if not is_random_iter:  # 如使用相邻采样，在epoch开始时初始化隐藏状态
             state = init_rnn_state(batch_size, num_hiddens)
@@ -257,7 +257,7 @@ def train_and_predict_rnn(rnn, get_params, init_rnn_state, num_hiddens,
                 y=tf.convert_to_tensor(y,dtype=tf.float32)
                 # 使用交叉熵损失计算平均分类误差
                 l = tf.reduce_mean(tf.losses.sparse_categorical_crossentropy(y,outputs))
-                
+
             grads = tape.gradient(l, params)
             grads= grad_clipping(grads,clipping_theta) # 梯度裁剪
             optimizer.apply_gradients(zip(grads, params))
@@ -275,7 +275,7 @@ def train_and_predict_rnn(rnn, get_params, init_rnn_state, num_hiddens,
                     prefix, pred_len, rnn, params, init_rnn_state,
                     num_hiddens, vocab_size,  idx_to_char, char_to_idx))
 
-  
+
   # ############################## 6.5 ##################################3
 class RNNModel(keras.layers.Layer):
     def __init__(self, rnn_layer, vocab_size, **kwargs):
@@ -316,13 +316,13 @@ def predict_rnn_keras(prefix, num_chars, model, vocab_size, idx_to_char,
             #print(int(np.array(tf.argmax(Y[0],axis=-1))))
     return ''.join([idx_to_char[i] for i in output])
 
-def train_and_predict_rnn_keras(model, num_hiddens, vocab_size, 
+def train_and_predict_rnn_keras(model, num_hiddens, vocab_size,
                                 corpus_indices, idx_to_char, char_to_idx,
                                 num_epochs, num_steps, lr, clipping_theta,
                                 batch_size, pred_period, pred_len, prefixes):
     loss = tf.keras.losses.SparseCategoricalCrossentropy()
     optimizer=tf.keras.optimizers.SGD(learning_rate=lr)
-    
+
     for epoch in range(num_epochs):
         l_sum, n, start = 0.0, 0, time.time()
         data_iter = d2l.data_iter_consecutive(
@@ -333,7 +333,7 @@ def train_and_predict_rnn_keras(model, num_hiddens, vocab_size,
                 outputs, state = model(X, state)
                 y = Y.T.reshape((-1,))
                 l = loss(y,outputs)
-            
+
             grads = tape.gradient(l, model.variables)
             # 梯度裁剪
             grads=grad_clipping(grads, clipping_theta)
@@ -352,7 +352,7 @@ def train_and_predict_rnn_keras(model, num_hiddens, vocab_size,
 
 
 
-        
+
 # ###################### 7.2 ############################
 def train_2d(trainer):  # 本函数将保存在d2lzh_tensorflow2包中方便以后使用
     x1, x2, s1, s2 = -5, -2, 0, 0  # s1和s2是自变量状态，本章后续几节会使用
@@ -369,14 +369,14 @@ def show_trace_2d(f, results):  # 本函数将保存在d2lzh_tensorflow2包中�
     plt.contour(x1, x2, f(x1, x2), colors='#1f77b4')
     plt.xlabel('x1')
     plt.ylabel('x2')
-    
+
 # ###################### 7.3 ############################
 def get_data_ch7():  # 本函数已保存在d2lzh_tensorflow2包中方便以后使用
     data = np.genfromtxt('../../data/airfoil_self_noise.dat', delimiter='\t')
     data = (data - data.mean(axis=0)) / data.std(axis=0)
     return tf.convert_to_tensor(data[:1500, :-1],dtype=tf.float32), tf.convert_to_tensor(data[:1500, -1],dtype=tf.float32)
-  
-  
+
+
 def train_ch7(optimizer_fn, states, hyperparams, features, labels,
               batch_size=10, num_epochs=2):
     # 初始化模型
@@ -391,14 +391,14 @@ def train_ch7(optimizer_fn, states, hyperparams, features, labels,
     ls = [eval_loss()]
     data_iter = tf.data.Dataset.from_tensor_slices((features,labels)).batch(batch_size)
     data_iter = data_iter.shuffle(100)
-  
-    
+
+
     for _ in range(num_epochs):
         start = time.time()
         for batch_i, (X, y) in enumerate(data_iter):
             with tf.GradientTape() as tape:
                 l = tf.reduce_mean(loss(net(X, w, b), y))  # 使用平均损失
-                        
+
             grads = tape.gradient(l, [w,b])
             optimizer_fn([w, b], states, hyperparams,grads)  # 迭代模型参数
             if (batch_i + 1) * batch_size % 100 == 0:
@@ -409,14 +409,14 @@ def train_ch7(optimizer_fn, states, hyperparams, features, labels,
     plt.plot(np.linspace(0, num_epochs, len(ls)), ls)
     plt.xlabel('epoch')
     plt.ylabel('loss')
-    
-    
+
+
 def train_tensorflow2_ch7(trainer_name, trainer_hyperparams, features, labels,
                     batch_size=10, num_epochs=2):
     # 初始化模型
     net = tf.keras.Sequential()
     net.add(tf.keras.layers.Dense(1))
-    
+
     loss = tf.losses.MeanSquaredError()
 
     def eval_loss():
@@ -425,14 +425,14 @@ def train_tensorflow2_ch7(trainer_name, trainer_hyperparams, features, labels,
     ls = [eval_loss()]
     data_iter = tf.data.Dataset.from_tensor_slices((features,labels)).batch(batch_size)
     data_iter = data_iter.shuffle(100)
- 
+
     # 创建Trainer实例来迭代模型参数
     for _ in range(num_epochs):
         start = time.time()
         for batch_i, (X, y) in enumerate(data_iter):
             with tf.GradientTape() as tape:
                 l = tf.reduce_mean(loss(net(X), y))  # 使用平均损失
-                        
+
             grads = tape.gradient(l, net.trainable_variables)
             trainer.apply_gradients(zip(grads, net.trainable_variables))  # 迭代模型参数
             if (batch_i + 1) * batch_size % 100 == 0:
@@ -445,7 +445,7 @@ def train_tensorflow2_ch7(trainer_name, trainer_hyperparams, features, labels,
     plt.ylabel('loss')
 
 
-# ###################### 8.2 ############################  
+# ###################### 8.2 ############################
 class Benchmark(object):
   def __init__(self, prefix=None):
     self.prefix = prefix + ' ' if prefix else ''
