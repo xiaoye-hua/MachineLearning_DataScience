@@ -129,10 +129,10 @@ dmypy.json
 .pyre/
 .ipynb_checkpoints/
 .idea/*
-nlp/data_model/*
-nlp/BERT_Chinese_Classification-master/sim_model/*
-nlp/BERT_Chinese_Classification-master/models/*
-nlp/.idea/*
+TODO/nlp/data_model/*
+TODO/nlp/BERT_Chinese_Classification-master/sim_model/*
+TODO/nlp/BERT_Chinese_Classification-master/models/*
+TODO/nlp/.idea/*
 scripts/20190215_yolo_object_detection/yolo-coco/*
 scripts/20190215_yolo_object_detection/videos/*
 pyqt/original_pdf_image/*
@@ -140,8 +140,8 @@ pyqt/original_pdf_image/*
 data/*
 scripts/20190215_yolo_object_detection/.idea/*
 scripts/20190215_yolo_object_detection/output/*
-pretrained_models/*
-nlp/.idea/*
+TODO/pretrained_models/*
+TODO/nlp/.idea/*
 .idea/*
 project/*
 target/*
@@ -156,5 +156,5 @@ target/*
 ./model_finished/*
 log
 .DS_Store
-ongoing_notebooks/*
+TODO/ongoing_notebooks/*
 ./src/Model/data/*

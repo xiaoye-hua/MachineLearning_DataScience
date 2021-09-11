@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import os
 # from lstm_vae import create_lstm_vae
 from lstm_vae.vae_tensorflow import create_lstm_vae
-# from utils import name_to_vec, vec_to_name
+# from TODO import name_to_vec, vec_to_name
 import tensorflow as tf
 import numpy as np
 

@@ -7,7 +7,7 @@ import tensorflow as tf
 import numpy as np
 from unittest import TestCase
 
-# from src.utils.d2l import PositionalEncoding, EncoderBlock, AddNorm, PositionWiseFFN, TransformerEncoder, DecoderBlock
+# from src.TODO.d2l import PositionalEncoding, EncoderBlock, AddNorm, PositionWiseFFN, TransformerEncoder, DecoderBlock
 from src.Model.SequenceModel.Transformer import PositionalEncoding, AddNorm, PositionWiseFFN, EncoderBlock, TransformerEncoder, DecoderBlock
 import src.utils.d2l as d2l
 

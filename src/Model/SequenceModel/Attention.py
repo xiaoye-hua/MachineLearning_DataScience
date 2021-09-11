@@ -9,7 +9,7 @@ from tensorflow.keras.layers import Dense
 from src.Model.SequenceModel.Seq2Seq import sequence_mask
 from src.BaseClass.DLModel import DLModel
 import src.utils.d2l as d2l
-# from src.utils.d2l import transpose_qkv, transpose_output
+# from src.TODO.d2l import transpose_qkv, transpose_output
 
 
 #@save

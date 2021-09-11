@@ -2,7 +2,7 @@
 # @File    : d2l.py
 # @Author  : Hua Guo
 # @Time    : 2021/8/28 下午12:18
-# @Disc    : utils files copied from dive into deep learning
+# @Disc    : TODO files copied from dive into deep learning
 
 DATA_HUB = dict()
 DATA_URL = 'http://d2l-data.s3-accelerate.amazonaws.com/'
