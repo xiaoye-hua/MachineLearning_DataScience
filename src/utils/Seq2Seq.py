@@ -6,6 +6,7 @@
 import tensorflow as tf
 from tensorflow.keras import layers
 
+import src.Model.SequenceModel.RNN
 from src.BaseClass.DLModel import DLModel
 import src.utils.d2l as d2l
 
@@ -17,7 +18,7 @@ class Seq2SeqEncoder(d2l.Encoder):
         super().__init__(*kwargs)
         # Embedding layer
         self.embedding = tf.keras.layers.Embedding(vocab_size, embed_size)
-        self.rnn = tf.keras.layers.RNN(
+        self.rnn = src.Model.SequenceModel.RNN.RNN(
             tf.keras.layers.StackedRNNCells([
                 tf.keras.layers.GRUCell(num_hiddens, dropout=dropout)
                 for _ in range(num_layers)]), return_sequences=True,
@@ -38,7 +39,7 @@ class Seq2SeqDecoder(d2l.Decoder):
                  dropout=0, **kwargs):
         super().__init__(**kwargs)
         self.embedding = tf.keras.layers.Embedding(vocab_size, embed_size)
-        self.rnn = tf.keras.layers.RNN(
+        self.rnn = src.Model.SequenceModel.RNN.RNN(
             tf.keras.layers.StackedRNNCells([
                 tf.keras.layers.GRUCell(num_hiddens, dropout=dropout)
                 for _ in range(num_layers)]), return_sequences=True,

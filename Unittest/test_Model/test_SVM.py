@@ -10,7 +10,7 @@ from sklearn.metrics import classification_report
 from sklearn import datasets
 from sklearn.svm import SVC
 
-from src.Model.SVM import LinearSVM
+from src.Model.SVM.LinearSVM import LinearSVM
 
 
 class TestSVM(TestCase):

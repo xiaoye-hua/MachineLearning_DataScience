@@ -2,11 +2,14 @@
 Materials or code that I have used to learn machine/deep learning.
 
 ## Project Structure
-1. src/ source code
-2. Unittest/ unit test for source code
-4. notebooks/ jupyter notebooks
-5. scripts/ python scripts 
-3. data/ training data
+1. src/: source code
+2. Unittest/: unit test for source code
+4. notebooks/: jupyter notebooks
+5. scripts/: python scripts 
+3. data/: training data
+
+Refer to [cookiecutter-data-science-structure](https://drivendata.github.io/cookiecutter-data-science/#example) for machine learning project structure
+
 
 ## Machine Learning Algorithms Code Implementation
 
@@ -24,18 +27,32 @@ Materials or code that I have used to learn machine/deep learning.
     - SVM
         - [x] [Linear SVM](src/Model/SVM/LinearSVM.py)
         - [ ] Kernel SVM
+    - [x] [KNN](src/Model/KNN.py)
     - [ ] Naive Bayes
+    - [ ] K-means
+    - [ ] Hierarchical Clustering
 - Deep Learning 
     - [x] [Neural Network](src/Model/NN/NNModel.py)
     - Sequence Model
-        - RNN
-        - LSTM
-        - GRU
+        - [x] [RNN](src/Model/SequenceModel/RNN.py)
+        - [x] [LSTM](src/Model/SequenceModel/LSTM.py)
+        - [x] [GRU](src/Model/SequenceModel/GRU.py)
         - [x] [Attention](src/Model/SequenceModel/Attention.py)
         - [x] [seq2seq](src/Model/SequenceModel/Seq2Seq.py)
         - [x] [transformer](src/Model/SequenceModel/Transformer.py)
     - CNN: 
         - [x] [AlexNet](src/Model/CNN/AlexNet.py)
+        - [x] [VGG11](src/Model/CNN/VGG11.py)
+        - [x] [NiN](src/Model/CNN/NiN.py)
+        - [x] [GoogLeNet](src/Model/CNN/GoogLeNet.py)
+        - [x] [ResNet18](src/Model/CNN/ResNet18.py)
+        - [x] [DenseNet](src/Model/CNN/DenseNet.py)
 - (Deep) Reinforcement Learning
+    - Multi-bandit
+        - [ ] Contextual multi-bandit
+    - [x] [Deep Q-learning](src/ReinforcementLearning/Deep_Q_Learning)
+    - [x] [Policy gradient](src/ReinforcementLearning/policy_gradient)
+    - [x] [Actor-Critic](src/ReinforcementLearning/Actor_Critic)
+    - ....
 
-Refer to [cookiecutter-data-science-structure](https://drivendata.github.io/cookiecutter-data-science/#example) for machine learning project structure
+

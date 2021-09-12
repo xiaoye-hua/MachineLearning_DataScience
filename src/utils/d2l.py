@@ -3,6 +3,7 @@
 # @Author  : Hua Guo
 # @Time    : 2021/8/28 下午12:18
 # @Disc    : TODO files copied from dive into deep learning
+import src.Model.SequenceModel.RNN
 
 DATA_HUB = dict()
 DATA_URL = 'http://d2l-data.s3-accelerate.amazonaws.com/'
@@ -782,8 +783,8 @@ class RNN(d2l.Module):
         super().__init__()
         self.save_hyperparameters()
         rnn_cell = tf.keras.layers.SimpleRNNCell(num_hiddens)
-        self.rnn = tf.keras.layers.RNN(rnn_cell, time_major=True,
-                                       return_sequences=True, return_state=True)
+        self.rnn = src.Model.SequenceModel.RNN.RNN(rnn_cell, time_major=True,
+                                                   return_sequences=True, return_state=True)
 
     def forward(self, inputs, state):
         outputs, *state = self.rnn(inputs, state)
@@ -995,7 +996,7 @@ class Seq2SeqEncoder(d2l.Encoder):
         super().__init__(*kwargs)
         # Embedding layer
         self.embedding = tf.keras.layers.Embedding(vocab_size, embed_size)
-        self.rnn = tf.keras.layers.RNN(tf.keras.layers.StackedRNNCells(
+        self.rnn = src.Model.SequenceModel.RNN.RNN(tf.keras.layers.StackedRNNCells(
             [tf.keras.layers.GRUCell(num_hiddens, dropout=dropout)
              for _ in range(num_layers)]), return_sequences=True,
             return_state=True)
