@@ -2,13 +2,14 @@
 # @File    : LinearSVM.py
 # @Author  : Hua Guo
 # @Time    : 2021/9/10 下午10:34
-# @Disc    :
+# @Disc    : Inspired from https://github.com/cperales/SupportVectorMachine
 import numpy as np
 
 from src.Model.SVM.solver import fit_soft, fit
+from src.Model.SVM import BaseSVM
 
 
-class LinearSVM:
+class LinearSVM(BaseSVM):
     def __init__(self):
         self.w = None
         self.b = None
@@ -24,6 +25,7 @@ class LinearSVM:
             alphas = fit_soft(x=X, y=y, C=C)
         else:
             alphas = fit(x=X, y=y)
+        # Refer to 统计学习方法-李航 算法7.2
         self.w = np.sum(alphas*y[:, None]*X, axis=0)
         self.b = y - np.dot(self.w, X.T)
         self.b = sum(self.b)/self.b.size
@@ -36,10 +38,3 @@ class LinearSVM:
         y = np.sign(np.dot(self.w, X.T) + self.b*np.ones(X.shape[0]))
         return self.change_label(y, replace={-1.:0.})
 
-    def change_label(self, data, replace):
-        # change label from -1, 1 to 0, 1
-        # replace = {-1: 1}
-        replace = np.array([list(replace.keys()), list(replace.values())])    # Create 2D replacement matrix
-        mask = np.in1d(data, replace[0, :])                                   # Find elements that need replacement
-        data[mask] = replace[1, np.searchsorted(replace[0, :], data[mask])]
-        return data

@@ -1,16 +1,18 @@
 # -*- coding: utf-8 -*-
-# @File    : test_SVM.py
+# @File    : test_Classifier.py
 # @Author  : Hua Guo
-# @Time    : 2021/9/10 下午9:54
+# @Time    : 2021/9/13 上午3:29
 # @Disc    :
+from unittest.case import TestCase
+
 import numpy as np
-from unittest import TestCase
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import classification_report
 from sklearn import datasets
+from sklearn.metrics import classification_report
+from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
 
 from src.Model.SVM.LinearSVM import LinearSVM
+from src.Model.SVM.KernelSVM import KernelSVM
 
 
 class TestSVM(TestCase):
@@ -42,5 +44,11 @@ class TestSVM(TestCase):
     def test_LinearSVM_Binary_Soft(self):
         model = LinearSVM()
         model.fit(self.X_train, self.y_train, soft=True)
+        y_pred = model.predict(self.X_test)
+        print(classification_report(y_true=self.y_test, y_pred=y_pred))
+
+    def test_KernelSVM(self):
+        model = KernelSVM()
+        model.fit(self.X_train, self.y_train)
         y_pred = model.predict(self.X_test)
         print(classification_report(y_true=self.y_test, y_pred=y_pred))

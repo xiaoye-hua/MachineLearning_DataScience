@@ -25,8 +25,8 @@ Refer to [cookiecutter-data-science-structure](https://drivendata.github.io/cook
         - [ ] Random Forest
         - [ ] Gradient Boosted Tree 
     - SVM
-        - [x] [Linear SVM](src/Model/SVM/LinearSVM.py)
-        - [ ] Kernel SVM
+        - [x] [Linear SVM (Binary classification)](src/Model/SVM/LinearSVM.py)
+        - [x] [Kernel SVM (Binary classification)](src/Model/SVM/KernelSVM.py)
     - [x] [KNN](src/Model/KNN.py)
     - [ ] Naive Bayes
     - [ ] K-means

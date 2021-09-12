@@ -1,4 +1,4 @@
-# helper code copy from the github https://github.com/cperales/SupportVectorMachine
+# helper code copied from the github https://github.com/cperales/SupportVectorMachine
 import numpy as np
 from cvxopt import matrix, solvers
 
