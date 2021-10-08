@@ -29,8 +29,9 @@ Refer to [cookiecutter-data-science-structure](https://drivendata.github.io/cook
         - [x] [Kernel SVM (Binary classification)](src/Model/SVM/KernelSVM.py)
     - [x] [KNN](src/Model/KNN.py)
     - [ ] Naive Bayes
-    - [ ] K-means
-    - [ ] Hierarchical Clustering
+    - Clustering
+        - [ ] K-means
+        - [ ] Hierarchical Clustering
 - Deep Learning 
     - [x] [Neural Network](src/Model/NN/NNModel.py)
     - Sequence Model
