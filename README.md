@@ -54,5 +54,13 @@ Refer to [cookiecutter-data-science-structure](https://drivendata.github.io/cook
     - [x] [Policy gradient](src/ReinforcementLearning/policy_gradient)
     - [x] [Actor-Critic](src/ReinforcementLearning/Actor_Critic)
     - ....
-
+- Application 
+    - Recommendation
+        - [ ] Deep Semantic Similarity Model(DSSM)
+        - [ ] YoutubeDNN
+        - [ ] MIND
+        - [x] [Matrix Factorization (MF)](src/Model/Recommender/MF.py)
+        - [x] [Factorization Machine (FM)](src/Model/Recommender/FM.py)
+        - [x] [Wide & deep](src/Model/Recommender/WideDeep.py)
+        - [x] [DeepFM](src/Model/Recommender/DeepFM.py)
 
