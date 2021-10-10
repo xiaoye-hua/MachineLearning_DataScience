@@ -1,8 +1,4 @@
-# -*- coding: utf-8 -*-
-# @File    : ctr_prediction.py
-# @Author  : Hua Guo
-# @Time    : 2021/10/9 上午11:31
-# @Disc    :
+# copy from deepctr example
 
 import pandas as pd
 from sklearn.metrics import log_loss, roc_auc_score
