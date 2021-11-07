@@ -38,7 +38,7 @@ def cate_features_plot(df, col, target, target_binary=True, figsize=(20,6)):
 
     plt.subplot(121)
     if target_binary:
-        tmp = pd.crosstab(df[col], df[target], normalize='index') * 100
+        tmp = round(pd.crosstab(df[col], df[target], normalize='index'), 2)
         tmp = tmp.reset_index()
         # tmp.rename(columns={0: 'NoFraud', 1: 'Fraud'}, inplace=True)
 
@@ -63,19 +63,6 @@ def cate_features_plot(df, col, target, target_binary=True, figsize=(20,6)):
     ax[1].tick_params(axis='x', rotation=90)
     labels(ax[1], df[col].dropna())
     plt.show()
-
-
-    # fig, ax = plt.subplots(1, 2, figsize=(15, 5))
-    # plt.subplot(121)
-    # sns.countplot(data=df, x=col,
-    #               # order of x
-    #               order=sorted(df[col].dropna().unique()))
-    # plt.subplot(122)
-    # sns.countplot(data=df, x=col
-    #               , hue=target
-    #               # order of x
-    #               , order=sorted(df[col].dropna().unique()))
-    # plt.show()
 
 def get_col_type_dist(df: pd.DataFrame) -> None:
         """

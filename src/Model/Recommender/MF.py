@@ -19,8 +19,8 @@ class MF(Model):
         self.item_bias = Embedding(input_dim=item_num, output_dim=1)
 
     def call(self, inputs: Dict[str, int], training=None, mask=None):
-        user_id = inputs["user_id"]
-        item_id = inputs['item_id']
+        user_id = inputs["user_id"]-1
+        item_id = inputs['item_id']-1
         user_rep = self.user_vector(user_id)
         item_rep = self.item_vector(item_id)
         user_bias = self.user_bias(user_id)
