@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
-# @File    : memory_reduction.py
+# @File    : memory_utils.py
 # @Author  : Hua Guo
-# @Time    : 2021/10/1 上午10:19
 # @Disc    :
-import numpy as np
 import pandas as pd
+import numpy as np
+from tqdm import tqdm
+import logging
+logging.getLogger(__name__)
 
 
 def reduce_mem_usage(df: pd.DataFrame, verbose=True) -> pd.DataFrame:
@@ -19,7 +21,7 @@ def reduce_mem_usage(df: pd.DataFrame, verbose=True) -> pd.DataFrame:
     """
     numerics = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
     start_mem = df.memory_usage().sum() / 1024**2
-    for col in df.columns:
+    for col in tqdm(df.columns):
         col_type = df[col].dtypes
         if col_type in numerics:
             c_min = df[col].min()
@@ -42,5 +44,5 @@ def reduce_mem_usage(df: pd.DataFrame, verbose=True) -> pd.DataFrame:
                     df[col] = df[col].astype(np.float64)
     end_mem = df.memory_usage().sum() / 1024**2
     if verbose:
-        print('Mem. usage decreased to {:5.2f} Mb ({:.1f}% reduction)'.format(end_mem, 100 * (start_mem - end_mem) / start_mem))
+        logging.info('Mem. usage decreased to {:5.2f} Mb ({:.1f}% reduction)'.format(end_mem, 100 * (start_mem - end_mem) / start_mem))
     return df
