@@ -5,8 +5,8 @@
 # @File    : run_q_learing.py
 # On-policy Q learning
 import numpy as np
-from Q_learning_Sarsa.maze_env import Maze
-from Q_learning_Sarsa.RL_brain.SarsaRL_brain import SarasTable
+from src.ReinforcementLearning.Q_learning_Sarsa.maze_env import Maze
+from src.ReinforcementLearning.Q_learning_Sarsa.RL_brain.SarsaRL_brain import SarasTable
 
 def update():
     for episode in range(100):

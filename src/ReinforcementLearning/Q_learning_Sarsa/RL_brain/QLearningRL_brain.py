@@ -4,7 +4,7 @@
 # @Author  : guohua08
 # @File    : QLearningRL_brain.py
 
-from Q_learning_Sarsa.RL_brain.BaseBrainClass import BaseBrainClass
+from src.ReinforcementLearning.Q_learning_Sarsa.RL_brain.BaseBrainClass import BaseBrainClass
 
 
 class QLearningTable(BaseBrainClass):

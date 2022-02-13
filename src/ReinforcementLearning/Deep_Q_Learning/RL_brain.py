@@ -3,11 +3,12 @@
 # @Time    : 2021/4/3 11:20 下午
 # @Author  : guohua08
 # @File    : RL_brain.py
-import tensorflow as tf
+# import tensorflow as tf
+import tensorflow.compat.v1 as tf
 import pandas as pd
 import numpy as np
 import matplotlib.pylab as plt
-from BaseClass.RLBrainBase import RLBrainReplayBase
+from src.ReinforcementLearning.BaseClass.RLBrainBase import RLBrainReplayBase
 
 np.random.seed(1)
 tf.set_random_seed(1)

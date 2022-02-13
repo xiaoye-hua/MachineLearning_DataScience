@@ -3,7 +3,7 @@
 # @Time    : 2021/4/3 5:00 下午
 # @Author  : guohua08
 # @File    : SarsaRL_brain.py
-from Q_learning_Sarsa.RL_brain.BaseBrainClass import BaseBrainClass
+from src.ReinforcementLearning.Q_learning_Sarsa.RL_brain.BaseBrainClass import BaseBrainClass
 
 
 class SarasTable(BaseBrainClass):

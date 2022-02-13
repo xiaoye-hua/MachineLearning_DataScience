@@ -6,7 +6,7 @@
 import pandas as pd
 import numpy as np
 
-from BaseClass.RLBrainBase import RLBrainBase
+from src.ReinforcementLearning.BaseClass.RLBrainBase import RLBrainBase
 
 
 class BaseBrainClass(RLBrainBase):

@@ -51,6 +51,8 @@ Refer to [cookiecutter-data-science-structure](https://drivendata.github.io/cook
 - (Deep) Reinforcement Learning
     - Multi-bandit
         - [ ] Contextual multi-bandit
+    - [x] [Q learning](src/ReinforcementLearning/Q_learning_Sarsa/run_q_learing.py)
+    - [x] [SARSA](src/ReinforcementLearning/Q_learning_Sarsa/run_Sarsa.py)
     - [x] [Deep Q-learning](src/ReinforcementLearning/Deep_Q_Learning)
     - [x] [Policy gradient](src/ReinforcementLearning/policy_gradient)
     - [x] [Actor-Critic](src/ReinforcementLearning/Actor_Critic)
@@ -65,3 +67,17 @@ Refer to [cookiecutter-data-science-structure](https://drivendata.github.io/cook
         - [x] [Wide & deep](src/Model/Recommender/WideDeep.py)
         - [x] [DeepFM](src/Model/Recommender/DeepFM.py)
 
+
+
+## Course 
+
+1. [Multi-agent System](https://github.com/xiaoye-hua/Multi_Agent_System)
+
+## How to run the code
+
+### Step 1: environment setup
+```shell script
+conda create --name ds_env --file requirements.txt python=3.6
+conda activate ds_env
+export PYTHONPATH=./:PYTHONPATH
+```

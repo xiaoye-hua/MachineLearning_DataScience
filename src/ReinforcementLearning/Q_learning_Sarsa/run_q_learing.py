@@ -5,23 +5,29 @@
 # @File    : run_q_learing.py
 # On-policy Q learning
 import numpy as np
-from Q_learning_Sarsa.maze_env import Maze
-from Q_learning_Sarsa.RL_brain.QLearningRL_brain import QLearningTable
+from src.ReinforcementLearning.Q_learning_Sarsa.maze_env import Maze
+from src.ReinforcementLearning.Q_learning_Sarsa.RL_brain.QLearningRL_brain import QLearningTable
 
 
 def update():
     for episode in range(100):
         observation = env.reset()
         step = 0
+        reward_lst = []
+        slidding_reward = 0
         while True:
             env.render()
             step += 1
             action = RL_brain.take_action(str(observation))
             observation_, reward, done = env.step(action)
+            reward_lst.append(reward)
             RL_brain.learn(str(observation), action, str(observation_), reward)
             observation = observation_
+            total_reward = sum(reward_lst)
             if done:
-                print(f"Episode: {episode}; total steps: {step}; reward: {reward}")
+                slidding_reward = slidding_reward * 0.99 + total_reward * 0.01
+                print(reward_lst)
+                print(f"Episode: {episode}; total steps: {step}; Final reward: {reward}; total reward: {total_reward}; slidding reward: {slidding_reward}")
                 break
     print("Game Over")
     env.destroy()

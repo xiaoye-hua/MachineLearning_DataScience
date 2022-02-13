@@ -6,8 +6,8 @@
 import numpy as np
 import matplotlib.pylab as plt
 
-from Deep_Q_Learning.maze_env import Maze
-from Deep_Q_Learning.RL_brain import DQN
+from src.ReinforcementLearning.Deep_Q_Learning.maze_env import Maze
+from src.ReinforcementLearning.Deep_Q_Learning.RL_brain import DQN
 
 
 def update():
