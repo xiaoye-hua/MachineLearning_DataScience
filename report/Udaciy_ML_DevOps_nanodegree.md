@@ -1,5 +1,5 @@
 
-
+## Summary
 Project 2 & 3 are my favorite; project 4 is the worst one. 
 
 1. [Project 1 Predict Customer Churn](https://github.com/xiaoye-hua/udacity_devops_churn_prediction)
@@ -17,3 +17,7 @@ Project 2 & 3 are my favorite; project 4 is the worst one.
     2. FastAPI & how to test FastAPI without deployment 
     3. Deploy model on Heroku 
 4. [Projet 4](https://github.com/xiaoye-hua/udacity_project4)
+
+## TODO 
+
+1. [ ] migrate some code to ML_project_template
