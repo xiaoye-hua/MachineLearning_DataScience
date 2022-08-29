@@ -72,6 +72,7 @@ Refer to [cookiecutter-data-science-structure](https://drivendata.github.io/cook
 ## Course 
 
 1. [Multi-agent System](https://github.com/xiaoye-hua/Multi_Agent_System)
+2. [Udacity - Machine Learning DevOps Nanodegree Program](report/Udaciy_ML_DevOps_nanodegree.md)
 
 ## How to run the code
 
