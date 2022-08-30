@@ -74,6 +74,10 @@ Refer to [cookiecutter-data-science-structure](https://drivendata.github.io/cook
 1. [Multi-agent System](https://github.com/xiaoye-hua/Multi_Agent_System)
 2. [Udacity - Machine Learning DevOps Nanodegree Program](report/Udaciy_ML_DevOps_nanodegree.md)
 
+## Competition codes:
+
+1. [Personalize Expedia Hotel Searches - ICDM 2013](https://github.com/xiaoye-hua/expedia_hotel_recommendation)
+
 ## How to run the code
 
 ### Step 1: environment setup
