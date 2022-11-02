@@ -78,6 +78,12 @@ Refer to [cookiecutter-data-science-structure](https://drivendata.github.io/cook
 
 1. [Personalize Expedia Hotel Searches - ICDM 2013](https://github.com/xiaoye-hua/expedia_hotel_recommendation)
 
+## More learning codes
+
+
+1. Kaggle 
+    1. [categorical feature with LR, XGBoost and CatBoost](https://www.kaggle.com/code/huaguo/categorical-feature-with-lr-xgboost-and-catboost)
+ 
 ## How to run the code
 
 ### Step 1: environment setup
