@@ -6,9 +6,7 @@
 
 1. [ ] key metrics
 
-## Previous Methods
-
-## New Methods
+## Previous Methods & New Methods
 
 ## Impacts
 
