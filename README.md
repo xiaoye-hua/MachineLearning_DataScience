@@ -57,8 +57,8 @@ Refer to [cookiecutter-data-science-structure](https://drivendata.github.io/cook
     - [x] [Policy gradient](src/ReinforcementLearning/policy_gradient)
     - [x] [Actor-Critic](src/ReinforcementLearning/Actor_Critic)
     - ....
--  NLP 
-    - [ ] Word2Vector
+-  Representation Learning
+    - [x] [Word2Vector](summary/word2vector.md)
 - Application 
     - Recommendation
         - [ ] Deep Semantic Similarity Model(DSSM)
