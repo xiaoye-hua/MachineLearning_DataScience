@@ -75,10 +75,13 @@ Refer to [cookiecutter-data-science-structure](https://drivendata.github.io/cook
 
 1. [Multi-agent System](https://github.com/xiaoye-hua/Multi_Agent_System)
 2. [Udacity - Machine Learning DevOps Nanodegree Program](report/Udaciy_ML_DevOps_nanodegree.md)
+3. [Tensoflow: avanced technique specialization](course/tensorflow_advanced_technique_specialization)
 
 ## Competition codes:
 
 1. [Personalize Expedia Hotel Searches - ICDM 2013](https://github.com/xiaoye-hua/expedia_hotel_recommendation)
+2. [Amazon KDD Cup 2023 - Build Multilingual Recommendation System](https://github.com/xiaoye-hua/Amazon_KDD_Cup_2023)
+
 
 ## More learning codes
 
