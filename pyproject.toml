@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "ml-ds"
+version = "0.1.0"
+description = "python environment for MachineLearning_DataScience"
+authors = ["xiaoye_hua <huag@kth.se>"]
+readme = "README.md"
+packages = [{include = "ml_ds"}]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+transformers = "^4.37.2"
+torch = "^2.2.0"
+jupyter = "^1.0.0"
+pillow = "^10.2.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

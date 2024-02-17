@@ -93,7 +93,5 @@ Refer to [cookiecutter-data-science-structure](https://drivendata.github.io/cook
 
 ### Step 1: environment setup
 ```shell script
-conda create --name ds_env --file requirements.txt python=3.6
-conda activate ds_env
-export PYTHONPATH=./:PYTHONPATH
+
 ```
